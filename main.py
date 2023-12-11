@@ -6,10 +6,12 @@ import numpy as np
 SCREEN_SIZE = (800, 600)
 CELL_SIZE = 10
 CELL_COUNT = (60, 80)
-COLOR_BG = (20, 20, 20)
-COLOR_GRID = (60, 60, 60)
-COLOR_DIE_NEXT = (180, 180, 180)
-COLOR_ALIVE_NEXT = (240, 240, 240)
+COLOR_BG = (10, 10, 10)
+COLOR_GRID = (40, 40, 40)
+COLOR_DIE_NEXT = (20, 60, 0)
+COLOR_ALIVE_NEXT = (80, 240, 0)
+PAUSE = 0.001
+FPS = 60
 
 
 def update(screen, cells, size, with_progress=False):
@@ -49,7 +51,7 @@ def main():
 
     pg.display.flip()
     pg.display.update()
-    
+
     clock = pg.time.Clock()
 
     running = False
@@ -71,16 +73,16 @@ def main():
                 pg.display.update()
 
         screen.fill(COLOR_GRID)
-        
+
         pg.display.set_caption(f"FPS: {str(int(clock.get_fps()))}")
 
         if running:
             cells = update(screen, cells, CELL_SIZE, with_progress=True)
             pg.display.update()
-        
-        clock.tick(60)
 
-        time.sleep(0.01)
+        clock.tick(FPS)
+
+        time.sleep(PAUSE)
 
 
 if __name__ == '__main__':
