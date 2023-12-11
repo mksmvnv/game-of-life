@@ -49,6 +49,8 @@ def main():
 
     pg.display.flip()
     pg.display.update()
+    
+    clock = pg.time.Clock()
 
     running = False
 
@@ -69,10 +71,14 @@ def main():
                 pg.display.update()
 
         screen.fill(COLOR_GRID)
+        
+        pg.display.set_caption(f"FPS: {str(int(clock.get_fps()))}")
 
         if running:
             cells = update(screen, cells, CELL_SIZE, with_progress=True)
             pg.display.update()
+        
+        clock.tick(60)
 
         time.sleep(0.01)
 
