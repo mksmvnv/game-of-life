@@ -16,32 +16,37 @@ PAUSE = 0.001
 FPS = 60
 
 
-# Function to update the state of cells on the screen
 def update(screen, cells, size, with_progress=False):
+    """Function to update the state of cells on the screen
+
+    Args:
+        screen (_type_): The screen object to draw cells on
+        cells (_type_): The array representing the state of cells
+        size (_type_): The size of each cell
+        with_progress (bool, optional): Flag to indicate
+        if progress visualization is enabled. Defaults to False.
+
+    Returns:
+        _type_: The updated array representing the state of cells
+    """
     # Create a new array of cells for updating
     updated_cells = np.zeros((cells.shape[0], cells.shape[1]))
 
-    # Iterate over each cell in the array
     for row, col in np.ndindex(cells.shape):
         # Count the number of neighbors for the cell
         neighbours = np.sum(cells[row-1:row+2, col-1:col+2]) - cells[row, col]
-        # Set the color based on the state of the cell
         color = COLOR_BG if cells[row, col] == 0 else COLOR_ALIVE_NEXT
 
-        # If the cell is alive
+        # Describe the rules of the game
         if cells[row, col] == 1:
-            # If it has less than 2 or more than 3 neighbors, it dies
             if neighbours < 2 or neighbours > 3:
                 if with_progress:
                     color = COLOR_DIE_NEXT
-            # If it has 2 or 3 neighbors, it stays alive
             elif 2 <= neighbours <= 3:
                 updated_cells[row, col] = 1
                 if with_progress:
                     color = COLOR_ALIVE_NEXT
-        # If the cell is dead
         else:
-            # If it has 3 neighbors, it comes to life
             if neighbours == 3:
                 updated_cells[row, col] = 1
                 if with_progress:
@@ -54,21 +59,19 @@ def update(screen, cells, size, with_progress=False):
     return updated_cells
 
 
-# Main function
 def main():
-    # Initialize Pygame
     pg.init()
-    # Create the screen
     screen = pg.display.set_mode(SCREEN_SIZE)
 
     # Create an array of cells
     cells = np.zeros(CELL_COUNT)
+
     # Fill the screen with the grid color
     screen.fill(COLOR_GRID)
+
     # Update the state of cells on the screen
     update(screen, cells, CELL_SIZE)
 
-    # Update the screen
     pg.display.flip()
     pg.display.update()
 
@@ -79,28 +82,21 @@ def main():
     running = False
 
     while True:
-        # Handle events
         for event in pg.event.get():
-            # If the event is quitting the game, exit the program
             if event.type == pg.QUIT:
                 pg.quit()
                 return
-            # If the spacebar is pressed,
-            # change the state of the game (running or stopped)
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     running = not running
                     update(screen, cells, CELL_SIZE)
                     pg.display.update()
-            # If the left mouse button is pressed,
-            # set the cell to alive
             if pg.mouse.get_pressed()[0]:
                 pos = pg.mouse.get_pos()
                 cells[pos[1] // CELL_SIZE, pos[0] // CELL_SIZE] = 1
                 update(screen, cells, CELL_SIZE)
                 pg.display.update()
 
-        # Fill the screen with the grid color
         screen.fill(COLOR_GRID)
 
         # Set the window title with the current FPS
